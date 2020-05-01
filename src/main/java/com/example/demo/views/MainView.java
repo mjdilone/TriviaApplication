@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * browser tab/window.
  */
 ///triviatesting/frontend
-@Route
+@Route("")
 @PWA(name = "Vaadin Application",
         shortName = "Vaadin App",
         description = "This is an example Vaadin application.",

@@ -1,4 +1,4 @@
-package com.example.demo.views;
+package com.portfolio.TriviaApp.service;
 
 import java.io.Serializable;
 

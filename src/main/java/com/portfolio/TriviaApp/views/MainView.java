@@ -1,9 +1,9 @@
-package com.example.demo.views;
-
+package com.portfolio.TriviaApp.views;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.portfolio.TriviaApp.service.GreetService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -27,7 +27,7 @@ import com.vaadin.flow.server.PWA;
  * browser tab/window.
  */
 ///triviatesting/frontend
-@Route("")
+@Route("testing")
 @PWA(name = "Vaadin Application",
         shortName = "Vaadin App",
         description = "This is an example Vaadin application.",

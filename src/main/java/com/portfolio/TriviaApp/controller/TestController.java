@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.portfolio.TriviaApp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

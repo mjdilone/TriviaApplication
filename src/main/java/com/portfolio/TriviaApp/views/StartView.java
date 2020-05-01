@@ -3,10 +3,13 @@ import javax.annotation.PostConstruct;
 
 import com.portfolio.TriviaApp.Constants;
 import com.portfolio.TriviaApp.Utils;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.HtmlImport;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -20,6 +23,8 @@ import com.vaadin.flow.server.VaadinSession;
 @Route(Constants.routeStart)
 @CssImport("./styles/shared-styles.css")
 @CssImport(Constants.cssImportAnimate)
+@CssImport(Constants.cssImportTriviaApp)
+@StyleSheet(Constants.cssImportTriviaApp)
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class StartView extends VerticalLayout {
 	private static final long serialVersionUID = 3160388374346480741L;
@@ -51,7 +56,7 @@ public class StartView extends VerticalLayout {
     @PostConstruct
     public void init() {
     	//tutorial message
-    	
+    	UI.getCurrent().getPage().addStyleSheet(Constants.cssImportTriviaApp);
     	//tutorial
     	if(!tutorialIsClosed) {
         	Label tutorialNotificationLabel = new Label(Constants.tutorialStartMessage);

@@ -40,6 +40,8 @@ public class MainView extends VerticalLayout {
      *
      * @param service The message service. Automatically injected Spring managed bean.
      */
+	
+	@Autowired
     public MainView(@Autowired GreetService service) {
 
         // Use TextField for standard text input

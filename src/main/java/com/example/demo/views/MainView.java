@@ -1,5 +1,9 @@
 package com.example.demo.views;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -9,7 +13,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * A sample Vaadin view class.
@@ -41,9 +44,18 @@ public class MainView extends VerticalLayout {
      * @param service The message service. Automatically injected Spring managed bean.
      */
 	
-	@Autowired
-    public MainView(@Autowired GreetService service) {
+	
+	@Autowired 
+	GreetService service;
+	
+    public MainView() {
 
+    
+
+    }
+    
+    @PostConstruct
+    protected void init() {
         // Use TextField for standard text input
         TextField textField = new TextField("Your name");
 
@@ -63,6 +75,5 @@ public class MainView extends VerticalLayout {
         addClassName("centered-content");
 
         add(textField, button);
-
     }
 }

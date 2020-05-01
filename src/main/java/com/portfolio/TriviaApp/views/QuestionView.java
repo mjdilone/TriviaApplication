@@ -14,6 +14,8 @@ import com.portfolio.TriviaApp.model.Question;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.HtmlImport;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -29,11 +31,15 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 @Route(Constants.routeQuestion)
-@CssImport("./styles/shared-styles.css")
-@CssImport(Constants.cssImportAnimate)
-@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
-@CssImport(Constants.cssImportTriviaApp)
-@Theme(value = Lumo.class)
+//@CssImport("./styles/shared-styles.css")
+//@CssImport(Constants.cssImportAnimate)
+//@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
+//@CssImport(Constants.cssImportTriviaApp)
+//@Theme(value = Lumo.class)
+@StyleSheet("frontend://triviaApp.css")
+@StyleSheet("frontend://shared-styles.css")
+@StyleSheet("frontend://animate.css")
+@HtmlImport("shadow-dom-styles.html")
 public class QuestionView extends VerticalLayout {
 	private static final long serialVersionUID = -9173194680925998171L;
 	

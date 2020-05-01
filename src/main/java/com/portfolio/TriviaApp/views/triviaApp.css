@@ -1,0 +1,41 @@
+.question{
+	font-size: 23px;
+}
+
+.answers{
+/* 	font-size: 26px; */
+	size: 60px;
+  		
+}
+
+.correctLabel{
+	padding-top: 60px;
+	font-size: 23px;
+	
+}
+
+
+html { 
+  background: url(/images/singleRedLaserQuestionMark.jpg) black;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+body{
+	color:cyan;
+}
+
+.category{
+	white-space: nowrap; /*Stops CSS from going to a new line with bigger text*/ 
+}
+
+.categoryHeader{
+	font-size: 40px;
+	padding-bottom: 5%;
+}
+
+.offCenterRight{
+	padding-right: 400px;
+}

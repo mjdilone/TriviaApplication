@@ -7,6 +7,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.HtmlImport;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,9 +22,13 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 @Route(Constants.routeCategory)
-@CssImport("./styles/shared-styles.css")
-@CssImport(Constants.cssImportAnimate)
-@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
+//@CssImport("./styles/shared-styles.css")
+//@CssImport(Constants.cssImportAnimate)
+//@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
+@StyleSheet("frontend://triviaApp.css")
+@StyleSheet("frontend://shared-styles.css")
+@StyleSheet("frontend://animate.css")
+@HtmlImport("shadow-dom-styles.html")
 @Theme(value = Lumo.class)
 public class CategoryView extends VerticalLayout{
 	

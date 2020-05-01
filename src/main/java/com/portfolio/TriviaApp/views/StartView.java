@@ -3,11 +3,9 @@ import javax.annotation.PostConstruct;
 
 import com.portfolio.TriviaApp.Constants;
 import com.portfolio.TriviaApp.Utils;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Label;
@@ -17,15 +15,24 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.material.Material;
+
+
+
 
 @Route(Constants.routeStart)
-@CssImport("./styles/shared-styles.css")
-@CssImport(Constants.cssImportAnimate)
-@CssImport(Constants.cssImportTriviaApp)
-@StyleSheet(Constants.cssImportTriviaApp)
-@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
+//@CssImport("./styles/shared-styles.css")
+//@CssImport(Constants.cssImportAnimate)
+//@CssImport(Constants.cssImportTriviaApp)
+@StyleSheet("frontend://triviaApp.css")
+@StyleSheet("frontend://shared-styles.css")
+@StyleSheet("frontend://animate.css")
+@HtmlImport("shadow-dom-styles.html")
 public class StartView extends VerticalLayout {
 	private static final long serialVersionUID = 3160388374346480741L;
 
@@ -56,7 +63,8 @@ public class StartView extends VerticalLayout {
     @PostConstruct
     public void init() {
     	//tutorial message
-    	UI.getCurrent().getPage().addStyleSheet(Constants.cssImportTriviaApp);
+        
+    	
     	//tutorial
     	if(!tutorialIsClosed) {
         	Label tutorialNotificationLabel = new Label(Constants.tutorialStartMessage);
@@ -80,9 +88,11 @@ public class StartView extends VerticalLayout {
     	categoryInputLayout = new HorizontalLayout();
     	categoryLabel = new Label("Category:");
     	questionsCategory = new ComboBox<String>();
+    	questionsCategory.addClassNames("input","custom-1",".centercb");
 		questionsCategory.setAllowCustomValue(false);
         questionsCategory.setItems(Constants.categoriesList);
         questionsCategory.setWidth("350px");
+        
         questionsCategory.addValueChangeListener(valueChangeEventCategory -> {
         	if(valueChangeEventCategory == null) {
         		System.out.println("no value selected");
@@ -128,6 +138,10 @@ public class StartView extends VerticalLayout {
     	goButton = new Button("GO!");
     	goButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
     	goButton.addClassName("footer");
+    	
+//    	goButton.getStyle().set("position", "absolute");
+//    	goButton.getStyle().set("bottom", "10px");
+//    	goButton.getStyle().set("width", "50%");
     	goButton.addClickListener(goEvent -> {
     		if(tutorialNotification.isOpened()) {
     			tutorialNotification.close();

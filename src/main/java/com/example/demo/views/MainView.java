@@ -49,9 +49,6 @@ public class MainView extends VerticalLayout {
 	GreetService service;
 	
     public MainView() {
-
-    
-
     }
     
     @PostConstruct

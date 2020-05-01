@@ -49,6 +49,7 @@ public class MainView extends VerticalLayout {
 	GreetService service;
 	
     public MainView() {
+    	this.setAlignItems(Alignment.CENTER);
     }
     
     @PostConstruct

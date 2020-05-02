@@ -1,0 +1,116 @@
+@charset "ISO-8859-1";
+.col-1{width: 8.33%;}
+.col-2{width: 16.66%;}
+.col-3{width: 25%;}
+.col-4{width: 33.33%;}
+.col-5{width: 41.66%;}
+.col-6{width: 50%;}
+.col-7{width: 58.33%;}
+.col-8{width: 66.66%;}
+.col-9{width: 75%;}
+.col-10{width: 83.33%;}
+.col-11{width: 91.66%;}
+.col-12{width: 100%;}
+
+
+/*Mobile*/
+/*Only activates when Mobile is detected*/
+@media screen and (max-width : 680px){
+    ul.topnav li:not(:nth-child(1)){
+        display: none; /*tells the elements to disappear when the size get low*/
+    }
+    
+    
+    ul.topnav li.dropdownIcon{
+        display: block;
+        float: right;
+    }
+    
+    
+    ul.topnav.responsive li.dropdownIcon {
+        position: absolute;
+        top:0;
+        right: 0;
+    }
+    
+    
+    
+    /*Here is the styling for the topnav reponsive class, this class is made when the JS function runs*/
+    ul.topnav.responsive{
+        position: relative; /*relative so that the menu doesnt move all over the place*/
+    }
+    
+    ul.topnav.responsive li{
+        display: inherit;
+        float: none; /*have to set float of none because otherwise you'd inherit float from ul.topnav li*/
+        
+    }
+    
+    ul.topnav.responsive li a{
+        display: block;
+        text-align: left;
+    }
+    
+    section2Header {
+        font-size: 50px;
+    }
+    
+    article p{
+        font-size: 25px;
+    }
+    
+    
+    
+/*    Allows the elements to stack ontop of eachother*/
+    .col-6, .col-4,.col-7,.col-5{
+        width:100%;
+        margin:0;
+        
+    }
+    
+    /*you want all columns that can change for mobile to be in one class for simplicity*/
+    div.mobileStack{
+        width: 50%;
+        display: block;
+    }
+    
+    div.box{
+        padding: 5px;/*change the value of the padding since it is originally inherited*/
+    }
+    
+    
+    div.slopeIcon{
+        margin:10px;
+    }
+    /*you have to specify the element IN the div as well. Or else you the styling will only apply to the div and that won't affect the element itself*/
+    div.slopeIcon img { 
+        width: 100%;
+        
+    }
+    
+    div.leftSide-col,
+    div.rightSide-col{
+        margin:15px;
+    }
+    
+    input[type="text"]{
+        width:350px;
+    }
+    
+    .videoContainer iframe{
+        position: relative; /*stay in the normal position, don't move*/
+        width: 100%;
+        margin:0; /*Guarentees that the content is centered*/
+        overflow: hidden;
+    }
+    
+  	.responsive{
+  		position: relative;
+  		  width: 100%;
+  	}
+  	
+  	
+  	
+  	
+    
+}

@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -22,9 +23,6 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
 
-
-
-
 @Route(Constants.routeStart)
 //@CssImport("./styles/shared-styles.css")
 //@CssImport(Constants.cssImportAnimate)
@@ -32,6 +30,7 @@ import com.vaadin.flow.theme.material.Material;
 @StyleSheet("frontend://triviaApp.css")
 @StyleSheet("frontend://shared-styles.css")
 @StyleSheet("frontend://animate.css")
+@StyleSheet("frontend://media.css")
 @HtmlImport("shadow-dom-styles.html")
 public class StartView extends VerticalLayout {
 	private static final long serialVersionUID = 3160388374346480741L;
@@ -89,6 +88,7 @@ public class StartView extends VerticalLayout {
     	categoryLabel = new Label("Category:");
     	questionsCategory = new ComboBox<String>();
     	questionsCategory.addClassNames("input","custom-1",".centercb");
+    	questionsCategory.addClassNames("div","mobileStack");
 		questionsCategory.setAllowCustomValue(false);
         questionsCategory.setItems(Constants.categoriesList);
         questionsCategory.setWidth("350px");
@@ -155,5 +155,10 @@ public class StartView extends VerticalLayout {
     	add(triviaLabel);
     	add(inputLayout);
     	add(goButton);
+    	
+    	//mobile
+    	categoryInputLayout.addClassName("responsive");
+    	difficultyInputLayout.addClassName("responsive");
+    	questionsAmountInputLayout.addClassName("responsive");
     }
 }

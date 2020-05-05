@@ -24,7 +24,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.progressbar.ProgressBar;
+import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
@@ -92,25 +94,34 @@ public class QuestionView extends VerticalLayout {
 		}
 		
 		//questions
-		questionLayout = new HorizontalLayout();
-		questionLayout.setAlignItems(Alignment.CENTER);
-		questionLabel = new Label(Utils.replaceHtml(questionsList.get(questionCounter).getQuestion()));
-		questionLabel.addClassName("question");
-		questionLayout.add(questionLabel);
+		try {
+			questionLayout = new HorizontalLayout();
+			questionLayout.setAlignItems(Alignment.CENTER);
+			questionLabel = new Label(Utils.replaceHtml(questionsList.get(questionCounter).getQuestion()));
+			questionLabel.addClassName("question");
+			questionLayout.add(questionLabel);
+			
+			add(questionLayout);
+		} catch (Exception e) {
+			throw new NotFoundException();			
+		}
 		
-		add(questionLayout);
 		
 		//answer TODO randomize the answersList, clean up the logic here
-		answerLayout = new HorizontalLayout();
-		answers = new ListBox<>();
-		answers.getElement().getClassList().add("answers");
-		answersList = questionsList.get(questionCounter).getIncorrectAnswers();
-		answersList.add(questionsList.get(questionCounter).getCorrectAnswer());
-		Collections.shuffle(answersList);
-		answers.setItems(answersList);
-		correctLabel = new Label();
-		correctLabel.setVisible(false);
-		correctLabel.addClassNames("correctLabel");
+		try {
+			answerLayout = new HorizontalLayout();
+			answers = new ListBox<>();
+			answers.getElement().getClassList().add("answers");
+			answersList = questionsList.get(questionCounter).getIncorrectAnswers();
+			answersList.add(questionsList.get(questionCounter).getCorrectAnswer());
+			Collections.shuffle(answersList);
+			answers.setItems(answersList);
+			correctLabel = new Label();
+			correctLabel.setVisible(false);
+			correctLabel.addClassNames("correctLabel");
+		} catch (Exception e) {
+			throw new NotFoundException();		
+		}
 		
 		//change listener for answers, this checks if you pick correctly
 		answers.addValueChangeListener(valueChangeEvent -> {
@@ -133,59 +144,63 @@ public class QuestionView extends VerticalLayout {
 			}
 		});
 		
-		answerLayout.add(answers);
-		add(answerLayout);
-		
-		//shows if the correct answer was chosen
-		add(correctLabel);
-		
-		//footer
-		footerLayout = new VerticalLayout();
-		footerLayout.setAlignItems(Alignment.CENTER);
-		footerLayout.addClassName("position-bottom");
-		
-		//timer bar
-		progressBar = new ProgressBar();
-		progressBar.setValue((double)questionCounter/(double)questionsList.size());
-		
-		nextButton = new Button("NEXT!");
-		nextButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		nextButton.addClickListener(nextButtonEvent -> {
-			if(questionCounter < questionsList.size()-1) {
-				questionCounter++;
-				this.init();
-			}else {
+		try {
+			answerLayout.add(answers);
+			add(answerLayout);
+			
+			//shows if the correct answer was chosen
+			add(correctLabel);
+			
+			//footer
+			footerLayout = new VerticalLayout();
+			footerLayout.setAlignItems(Alignment.CENTER);
+			footerLayout.addClassName("position-bottom");
+			
+			//timer bar
+			progressBar = new ProgressBar();
+			progressBar.setValue((double)questionCounter/(double)questionsList.size());
+			
+			nextButton = new Button("NEXT!");
+			nextButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+			nextButton.addClickListener(nextButtonEvent -> {
+				if(questionCounter < questionsList.size()-1) {
+					questionCounter++;
+					this.init();
+				}else {
+					this.getUI().ifPresent(ui -> ui.navigate(Constants.routeStart));
+				}
+			});
+			
+			failureLabel = new Label("You have used up all your guesses!");
+			failureButton = new Button("Back to Selection");
+			failureButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+			failureButton.addClickListener(failureButtonEvent ->{
 				this.getUI().ifPresent(ui -> ui.navigate(Constants.routeStart));
+			});
+			
+			nextButton.setVisible(false);
+			footerLayout.add(nextButton,progressBar);
+			
+			add(footerLayout);
+			
+			//notification
+			if(!tutorialIsClosed) {
+				Label tutorialMessageQuestionLabel = new Label(Constants.tutorialQuestion);
+				Button tutorialCloseButton = new Button(new Icon(VaadinIcon.CLOSE));
+				Notification tutorialMessageQuestion = new Notification(tutorialMessageQuestionLabel,tutorialCloseButton);
+				tutorialMessageQuestion.setPosition(Constants.tutorialPosition);
+				tutorialMessageQuestion.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
+				tutorialMessageQuestion.setOpened(true);
+				tutorialCloseButton.addClickListener(tutorialCloseEvent ->{
+					if(tutorialMessageQuestion.isOpened()) {
+						tutorialMessageQuestion.close();
+					}
+				});
+				tutorialIsClosed = !tutorialIsClosed;
 			}
-		});
-		
-		failureLabel = new Label("You have used up all your guesses!");
-		failureButton = new Button("Back to Selection");
-		failureButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		failureButton.addClickListener(failureButtonEvent ->{
-			this.getUI().ifPresent(ui -> ui.navigate(Constants.routeStart));
-		});
-		
-		nextButton.setVisible(false);
-		footerLayout.add(nextButton,progressBar);
-		
-		add(footerLayout);
-		
-		//notification
-		if(!tutorialIsClosed) {
-			Label tutorialMessageQuestionLabel = new Label(Constants.tutorialQuestion);
-	    	Button tutorialCloseButton = new Button(new Icon(VaadinIcon.CLOSE));
-			Notification tutorialMessageQuestion = new Notification(tutorialMessageQuestionLabel,tutorialCloseButton);
-			tutorialMessageQuestion.setPosition(Constants.tutorialPosition);
-	    	tutorialMessageQuestion.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
-	    	tutorialMessageQuestion.setOpened(true);
-	    	tutorialCloseButton.addClickListener(tutorialCloseEvent ->{
-	    		if(tutorialMessageQuestion.isOpened()) {
-	    			tutorialMessageQuestion.close();
-	    		}
-	    	});
-	    	tutorialIsClosed = !tutorialIsClosed;
-		}
+		} catch (Exception e) {
+			
+			throw new NotFoundException();		}
 
 	}
 

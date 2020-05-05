@@ -17,6 +17,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
@@ -146,7 +147,10 @@ public class StartView extends VerticalLayout {
     		if(tutorialNotification.isOpened()) {
     			tutorialNotification.close();
     		}
-			this.getUI().ifPresent(ui -> ui.navigate("question"));
+    	
+    			this.getUI().ifPresent(ui -> ui.navigate("question"));
+			
+			
 		});
     	
     	//add elements to UI

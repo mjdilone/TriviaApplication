@@ -44,8 +44,8 @@ public class Utils {
 	public static String replaceHtml(String inputString) {
 		String strippedText = inputString
 				.replaceAll("&quot;", "\"")
-				.replaceAll("&#039;", "'");
-		
+				.replaceAll("&#039;", "'")
+				.replaceAll("&rsquo;", "'");
 		return strippedText;
 	}
 	

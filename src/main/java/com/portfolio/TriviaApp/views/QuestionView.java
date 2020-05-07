@@ -75,9 +75,15 @@ public class QuestionView extends VerticalLayout {
 	private VerticalLayout footerLayout;
 	private ProgressBar progressBar;
 	
+	private Label guessesLabel;
+	
 	//buttons
 	private Button nextButton;
 	private Button failureButton;
+	
+	private HorizontalLayout guessLayout;
+	private Icon guessIcon;
+	
 	Label failureLabel;
 	public QuestionView() {
 		this.setAlignItems(Alignment.CENTER);
@@ -88,21 +94,35 @@ public class QuestionView extends VerticalLayout {
 	public void init() {
 		removeAll(); //TODO should be a better way of doing this
 		checkChosenValues(chosenCategory,chosenAmount,chosenDifficulty);
-		
 		if(questionsList == null) {
 			questionsList = controller.fecthQuestions(map.get(chosenCategory), Integer.parseInt(chosenAmount), chosenDifficulty);
 		}
 		
+	
+		
 		//questions
 		try {
 			questionLayout = new HorizontalLayout();
+			
+
+			
 			questionLayout.setAlignItems(Alignment.CENTER);
 			questionLabel = new Label(Utils.replaceHtml(questionsList.get(questionCounter).getQuestion()));
 			questionLabel.addClassName("question");
 			questionLayout.add(questionLabel);
 			
+			//add guess layout
+			guessLayout = new HorizontalLayout();
+			for(int i = 0;i< guessCounter;i++) {
+				guessLayout.add((new Icon("vaadin", "star")));
+			}
+			
+			
+			
 			add(questionLayout);
+			questionLayout.add(guessLayout);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new NotFoundException();			
 		}
 		
@@ -115,11 +135,15 @@ public class QuestionView extends VerticalLayout {
 			answersList = questionsList.get(questionCounter).getIncorrectAnswers();
 			answersList.add(questionsList.get(questionCounter).getCorrectAnswer());
 			Collections.shuffle(answersList);
+			for(String string : answersList) {
+				string = Utils.replaceHtml(string);
+			}
 			answers.setItems(answersList);
 			correctLabel = new Label();
 			correctLabel.setVisible(false);
 			correctLabel.addClassNames("correctLabel");
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new NotFoundException();		
 		}
 		
@@ -127,13 +151,33 @@ public class QuestionView extends VerticalLayout {
 		answers.addValueChangeListener(valueChangeEvent -> {
 			if(guessCounter>0) {
 				if(valueChangeEvent.getValue().equalsIgnoreCase(questionsList.get(questionCounter).getCorrectAnswer())) {
+					System.out.println("correct answer given");
+//					remove(guessLayout);
+//					guessLayout = new HorizontalLayout();
+					guessLayout.removeAll();
+					for(int i = 0;i< guessCounter;i++) {
+						guessLayout.add((new Icon("vaadin", "star")));
+					}
+					questionLayout.add(guessLayout);
+					
+					
 					correctLabel.setText("Correct!");
 					correctLabel.setVisible(true);
 					nextButton.setVisible(true);
 				}else {
+					guessCounter--;
+					
+//					remove(guessLayout);
+//					guessLayout = new HorizontalLayout();
+					guessLayout.removeAll();
+					for(int i = 0;i< guessCounter;i++) {
+						guessLayout.add((new Icon("vaadin", "star")));
+					}
+					questionLayout.add(guessLayout);
+					
 					correctLabel.setText("Wrong!");
 					correctLabel.setVisible(true);
-					guessCounter--;
+					
 					if(guessCounter <= 0) {
 						add(failureLabel);
 						add(failureButton);
@@ -199,7 +243,7 @@ public class QuestionView extends VerticalLayout {
 				tutorialIsClosed = !tutorialIsClosed;
 			}
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			throw new NotFoundException();		}
 
 	}

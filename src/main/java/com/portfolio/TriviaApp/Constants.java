@@ -18,7 +18,7 @@ public class Constants {
 	//tutorial values
 	public static final Position tutorialPosition = Position.TOP_START;
 	public static final String tutorialStartMessage = "Choose your category of questions, amount of questions to be answered and question difficulty";
-	public static String tutorialQuestion = "Click the correct answer";
+	public static String tutorialQuestion = "Click the correct answer, stars represent how many wrong guesses are left";
 	
 	//view routes
 	public static final String routeStart = "";

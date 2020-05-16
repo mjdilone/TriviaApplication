@@ -3,6 +3,8 @@ import javax.annotation.PostConstruct;
 
 import com.portfolio.TriviaApp.Constants;
 import com.portfolio.TriviaApp.Utils;
+import com.vaadin.flow.component.HtmlComponent;
+import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -25,9 +27,9 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
 
 @Route(Constants.routeStart)
-//@CssImport("./styles/shared-styles.css")
-//@CssImport(Constants.cssImportAnimate)
-//@CssImport(Constants.cssImportTriviaApp)
+//@CssImport("./styles/shared-styles.css") v14
+//@CssImport(Constants.cssImportAnimate) v14
+//@CssImport(Constants.cssImportTriviaApp) v14
 @StyleSheet("frontend://triviaApp.css")
 @StyleSheet("frontend://shared-styles.css")
 @StyleSheet("frontend://animate.css")
@@ -42,15 +44,18 @@ public class StartView extends VerticalLayout {
 	Label triviaLabel;
 	
 	VerticalLayout inputLayout; 
-	HorizontalLayout categoryInputLayout;
+//	HorizontalLayout categoryInputLayout;
+	VerticalLayout categoryInputLayout;
 	Label categoryLabel;
 	ComboBox<String> questionsCategory;
 	
-	HorizontalLayout questionsAmountInputLayout;
+//	HorizontalLayout questionsAmountInputLayout;
+	VerticalLayout questionsAmountInputLayout;
 	Label questionsAmountLabel;
 	ComboBox<Integer> questionsAmountBox;
 	
-	HorizontalLayout difficultyInputLayout;
+//	HorizontalLayout difficultyInputLayout;
+	VerticalLayout difficultyInputLayout;
 	Label difficultyLabel;
 	ComboBox<String> difficultySelectionBox;
 
@@ -68,8 +73,10 @@ public class StartView extends VerticalLayout {
     	//tutorial
     	if(!tutorialIsClosed) {
         	Label tutorialNotificationLabel = new Label(Constants.tutorialStartMessage);
+        	Label tutorialNotificationLabel2 = new Label(Constants.tutorialStartMessage);
         	Button tutorialCloseButton = new Button(new Icon(VaadinIcon.CLOSE));
         	tutorialNotification = new Notification(tutorialNotificationLabel,tutorialCloseButton);
+//        	tutorialNotification = new Notification(tutorialNotificationLabeltutorialCloseButton);
         	tutorialNotification.setPosition(Constants.tutorialPosition);
         	tutorialNotification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
         	tutorialNotification.setOpened(true);
@@ -82,11 +89,16 @@ public class StartView extends VerticalLayout {
     	}
 
     	triviaLabel = new Label("Trivia");
+    	triviaLabel.addClassName("header");
+    	
+    	
     	inputLayout = new VerticalLayout();
     	inputLayout.setAlignItems(Alignment.CENTER);
     	
-    	categoryInputLayout = new HorizontalLayout();
-    	categoryLabel = new Label("Category:");
+    	categoryInputLayout = new VerticalLayout();
+    	categoryInputLayout.setAlignItems(Alignment.CENTER);
+    	categoryInputLayout.setPadding(false);
+    	categoryLabel = new Label("Category:  ");
     	questionsCategory = new ComboBox<String>();
     	questionsCategory.addClassNames("input","custom-1",".centercb");
     	questionsCategory.addClassNames("div","mobileStack");
@@ -104,9 +116,12 @@ public class StartView extends VerticalLayout {
         });
     	categoryInputLayout.add(categoryLabel,questionsCategory);
 
-    	questionsAmountInputLayout = new HorizontalLayout();
+    	questionsAmountInputLayout = new VerticalLayout();
+    	questionsAmountInputLayout.setAlignItems(Alignment.CENTER);
+    	questionsAmountInputLayout.setPadding(false);
     	questionsAmountLabel = new Label("Questions:");
     	questionsAmountBox = new ComboBox<Integer>();
+    	questionsAmountBox.setAllowCustomValue(false);
     	questionsAmountBox.setWidth("350px");
         questionsAmountBox.setItems(Utils.toArrayList(Constants.questionsAmountValues));
         questionsAmountBox.addValueChangeListener(valueChangeEventQuestionsAmount -> {
@@ -117,9 +132,12 @@ public class StartView extends VerticalLayout {
     			VaadinSession.getCurrent().setAttribute(Constants.sessionAmount,valueChangeEventQuestionsAmount.getValue());
         	}
         });
+        
     	questionsAmountInputLayout.add(questionsAmountLabel,questionsAmountBox);
     	
-    	difficultyInputLayout = new HorizontalLayout();
+    	difficultyInputLayout = new VerticalLayout();
+    	difficultyInputLayout.setAlignItems(Alignment.CENTER);
+    	difficultyInputLayout.setPadding(false);
     	difficultyLabel = new Label("Difficulty:");
     	difficultySelectionBox = new ComboBox<String>();
 		difficultySelectionBox.setAllowCustomValue(false);

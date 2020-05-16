@@ -2,6 +2,7 @@ package com.portfolio.TriviaApp.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -11,6 +12,8 @@ import com.portfolio.TriviaApp.Constants;
 import com.portfolio.TriviaApp.Utils;
 import com.portfolio.TriviaApp.controller.QuestionController;
 import com.portfolio.TriviaApp.model.Question;
+import com.vaadin.flow.component.HtmlComponent;
+import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -46,6 +49,7 @@ public class QuestionView extends VerticalLayout {
 	private static final long serialVersionUID = -9173194680925998171L;
 	
 	private boolean tutorialIsClosed = false;
+	private boolean isFirstInit = true;
 	
 	//values for fetching questions
 	private String chosenCategory;
@@ -56,7 +60,7 @@ public class QuestionView extends VerticalLayout {
 	QuestionController controller;
 	
 	private int questionCounter = 0;
-	private int guessCounter = Constants.guessCounterLimit;
+	private int guessCounter = Constants.guessCounterStartValue;
 	
 	//View Variables
 	private HashMap<String, Integer> map = Constants.getCategoriesMap();
@@ -85,6 +89,14 @@ public class QuestionView extends VerticalLayout {
 	private Icon guessIcon;
 	
 	Label failureLabel;
+	
+	//game logic variables
+	private boolean gameIsFirstAttempt;
+	private VerticalLayout gameStarSpendLayout;
+	private Button gameStarSpendButton;
+	private Boolean gameStarSpendButtonIsAllowed;
+	private int gameConsecutiveCorrectCounter;
+	
 	public QuestionView() {
 		this.setAlignItems(Alignment.CENTER);
 	}
@@ -98,13 +110,9 @@ public class QuestionView extends VerticalLayout {
 			questionsList = controller.fecthQuestions(map.get(chosenCategory), Integer.parseInt(chosenAmount), chosenDifficulty);
 		}
 		
-	
-		
 		//questions
 		try {
 			questionLayout = new HorizontalLayout();
-			
-
 			
 			questionLayout.setAlignItems(Alignment.CENTER);
 			questionLabel = new Label(Utils.replaceHtml(questionsList.get(questionCounter).getQuestion()));
@@ -117,23 +125,29 @@ public class QuestionView extends VerticalLayout {
 				guessLayout.add((new Icon("vaadin", "star")));
 			}
 			
-			
-			
 			add(questionLayout);
-			questionLayout.add(guessLayout);
+			add(guessLayout);
+			
+			gameIsFirstAttempt = true;
+			
+			if(isFirstInit) {
+				gameConsecutiveCorrectCounter = 0;
+				gameStarSpendButtonIsAllowed = true;
+				allowSpendButton();
+				isFirstInit = false;
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NotFoundException();			
 		}
 		
-		
-		//answer TODO randomize the answersList, clean up the logic here
 		try {
 			answerLayout = new HorizontalLayout();
 			answers = new ListBox<>();
-			answers.getElement().getClassList().add("answers");
-			answersList = questionsList.get(questionCounter).getIncorrectAnswers();
+			answersList = new ArrayList<String>(questionsList.get(questionCounter).getIncorrectAnswers());
 			answersList.add(questionsList.get(questionCounter).getCorrectAnswer());
+			System.out.println("Correct Answer: " + questionsList.get(questionCounter).getCorrectAnswer());//TODO put this in the logger instead
 			Collections.shuffle(answersList);
 			for(String string : answersList) {
 				string = Utils.replaceHtml(string);
@@ -151,20 +165,29 @@ public class QuestionView extends VerticalLayout {
 		answers.addValueChangeListener(valueChangeEvent -> {
 			if(guessCounter>0) {
 				if(valueChangeEvent.getValue().equalsIgnoreCase(questionsList.get(questionCounter).getCorrectAnswer())) {
-					System.out.println("correct answer given");
+					
+					//testing
+					System.out.println("consecutive " + gameConsecutiveCorrectCounter);
+					if(gameIsFirstAttempt) {
+						raiseGuessCounter();
+						raiseConsecutiveCounter();
+						checkForStarSpendButton();
+					}
 //					remove(guessLayout);
 //					guessLayout = new HorizontalLayout();
 					guessLayout.removeAll();
 					for(int i = 0;i< guessCounter;i++) {
 						guessLayout.add((new Icon("vaadin", "star")));
 					}
-					questionLayout.add(guessLayout);
+//					questionLayout.add(guessLayout);
+//					add(guessLayout);
 					
 					
 					correctLabel.setText("Correct!");
 					correctLabel.setVisible(true);
 					nextButton.setVisible(true);
 				}else {
+					gameIsFirstAttempt=false;
 					guessCounter--;
 					
 //					remove(guessLayout);
@@ -173,7 +196,8 @@ public class QuestionView extends VerticalLayout {
 					for(int i = 0;i< guessCounter;i++) {
 						guessLayout.add((new Icon("vaadin", "star")));
 					}
-					questionLayout.add(guessLayout);
+//					questionLayout.add(guessLayout);
+//					add(guessLayout);
 					
 					correctLabel.setText("Wrong!");
 					correctLabel.setVisible(true);
@@ -197,7 +221,43 @@ public class QuestionView extends VerticalLayout {
 			
 			//footer
 			footerLayout = new VerticalLayout();
+			
 			footerLayout.setAlignItems(Alignment.CENTER);
+			
+			//star spender layout
+			gameStarSpendLayout = new VerticalLayout();
+			
+			
+			//spend a star to remove two wrong anwsers from the list
+			gameStarSpendButton.addClickListener(gameStarSpendClickEvent -> {
+				if(gameStarSpendButtonIsAllowed) {
+					decreaseGuessCounter();
+					
+					//resseting the guess layout
+					guessLayout.removeAll();
+					for(int i = 0;i< guessCounter;i++) {
+						guessLayout.add((new Icon("vaadin", "star")));
+					}
+					
+					//removing two incorrect answers
+					HashMap<Integer,String> incorrectAnswersMap = new HashMap<>(); 
+					for(String incorrectAnswer : questionsList.get(questionCounter).getIncorrectAnswers()) {
+						incorrectAnswersMap.put(incorrectAnswer.hashCode(),incorrectAnswer);
+					}
+					System.out.println(incorrectAnswersMap.toString());
+					
+					for(int i=0,j=0 ; i<=2 && j<answersList.size();j++) {
+						if(incorrectAnswersMap.containsValue(answersList.get(j))){
+							answersList.remove(j);
+							answers.setItems(answersList);
+							i++;
+						}
+					}
+				}
+				unAllowSpendButton();
+				gameIsFirstAttempt = false;
+			});
+			
 			footerLayout.addClassName("position-bottom");
 			
 			//timer bar
@@ -223,15 +283,27 @@ public class QuestionView extends VerticalLayout {
 			});
 			
 			nextButton.setVisible(false);
-			footerLayout.add(nextButton,progressBar);
+			gameStarSpendLayout.add(gameStarSpendButton);
+			footerLayout.add(nextButton,gameStarSpendLayout,progressBar);
 			
 			add(footerLayout);
 			
 			//notification
 			if(!tutorialIsClosed) {
-				Label tutorialMessageQuestionLabel = new Label(Constants.tutorialQuestion);
+				Label tutorialMessageQuestionLabelPart1 = new Label(Constants.tutorialQuestionPart1);
+				Label tutorialMessageQuestionLabelPart2 = new Label(Constants.tutorialQuestionPart2);
+				
 				Button tutorialCloseButton = new Button(new Icon(VaadinIcon.CLOSE));
-				Notification tutorialMessageQuestion = new Notification(tutorialMessageQuestionLabel,tutorialCloseButton);
+				//TODO try to fit this into one componenet or method
+				Notification tutorialMessageQuestion = new Notification(
+						tutorialMessageQuestionLabelPart1
+						,new HtmlComponent(Tag.BR)
+						,new HtmlComponent(Tag.BR)
+						,tutorialMessageQuestionLabelPart2
+						,new HtmlComponent(Tag.BR)
+						,tutorialCloseButton);
+				
+				
 				tutorialMessageQuestion.setPosition(Constants.tutorialPosition);
 				tutorialMessageQuestion.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
 				tutorialMessageQuestion.setOpened(true);
@@ -246,6 +318,48 @@ public class QuestionView extends VerticalLayout {
 			e.printStackTrace();
 			throw new NotFoundException();		}
 
+	}
+
+	private void checkForStarSpendButton() {
+		if(gameConsecutiveCorrectCounter >= 2) {
+			allowSpendButton();
+			gameConsecutiveCorrectCounter = 0;
+		}
+		
+	}
+
+	private void raiseConsecutiveCounter() {
+		if(gameConsecutiveCorrectCounter < 2) {
+			gameConsecutiveCorrectCounter ++;
+		}
+	}
+
+	private void allowSpendButton() {
+		gameStarSpendButtonIsAllowed = true;
+		gameStarSpendButton = new Button(new Icon("vaadin","bolt"));
+		gameStarSpendButton.addThemeVariants(ButtonVariant.LUMO_LARGE, ButtonVariant.LUMO_PRIMARY);
+	}
+
+	private void unAllowSpendButton() {
+		gameStarSpendButtonIsAllowed = false;
+		gameStarSpendButton.removeThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		gameStarSpendButton = new Button(new Icon("vaadin","bolt"));
+		
+	}
+	
+	
+
+	private void decreaseGuessCounter() {
+		if(guessCounter > 1) {
+			guessCounter--;
+		}
+		
+	}
+
+	private void raiseGuessCounter() {
+		if(guessCounter < Constants.guessCounterLimit) {
+			guessCounter++;
+		}
 	}
 
 	private void checkChosenValues(String category,String amount, String difficulty) {

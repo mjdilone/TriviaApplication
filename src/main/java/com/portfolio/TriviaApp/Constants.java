@@ -9,16 +9,20 @@ public class Constants {
 	public static final String testCallUrl = "https://opentdb.com/api.php?amount=10&category=15&difficulty=medium&type=multiple";
 	
 	//constant values
-	public static int guessCounterLimit = 5;
-	public static int[] questionsAmountValues = {3,10,15,25}; //TODO this might be able to be chaged to init ArrayList similar to below
+	public static final int  guessCounterStartValue = 5;
+	public static final int guessCounterLimit = 8;
+	public static final int[] questionsAmountValues = {3,10,15,25}; //TODO this might be able to be chaged to init ArrayList similar to below
 
 	
 	public static final String typeMultiple = "multiple";
 	public static final int[] questionsAmoutInput = {5,10,15,20};
 	//tutorial values
 	public static final Position tutorialPosition = Position.TOP_START;
-	public static final String tutorialStartMessage = "Choose your category of questions, amount of questions to be answered and question difficulty";
-	public static String tutorialQuestion = "Click the correct answer, stars represent how many wrong guesses are left";
+	public static final String tutorialStartMessage = "Choose your category of questions, \n amount of questions to be answered and question difficulty";
+//	public static String tutorialQuestionPart = "Click the correct answer \n stars represent how many wrong guesses are left\n click the thunderbolt button when it's"
+//			+ "available to spend a star and remove two wrong choices";
+	public static String tutorialQuestionPart1 = "Click the correct answer , stars represent how many wrong guesses are left";
+	public static String tutorialQuestionPart2 = "click the thunderbolt button when it's available to spend a star and remove two wrong choices";
 	
 	//view routes
 	public static final String routeStart = "";
